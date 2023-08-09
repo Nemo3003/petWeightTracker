@@ -8,7 +8,6 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Navbar/>
-      <Text>Open up App.tsx to start working on your app!</Text>
       <Home/>
       <StatusBar style="auto" />
       <Footer/>
