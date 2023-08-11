@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Button } from "react-native";
-import { Entries, MapEntries } from "../types/entries.type";
+import { MapEntries } from "../types/entries.type";
 
-const PreviousEntries = (entries:any) => {
+// Import the mock data
+import mockEntries from "../db/data.json";
+
+const PreviousEntries = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const handleClick = () => {
@@ -15,7 +18,7 @@ const PreviousEntries = (entries:any) => {
       <Button title="Show Entries" onPress={handleClick} />
       {isVisible && (
         <ScrollView>
-          {entries.map((entry:MapEntries) => (
+          {mockEntries.map((entry: MapEntries) => (
             <View key={entry.id} style={styles.entry}>
               <Text style={styles.name}>{entry.name}</Text>
               <Text style={styles.weight}>{entry.weight} lbs</Text>

@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
+import axios from 'axios';
+import {MONGODB_URI} from "@env";
 import { Entries } from "../types/entries.type";
+import PreviousEntries from "../components/PreviousEntries";
 
 const Home = () => {
+  const urlDB = MONGODB_URI
   const [petName, setPetName] = useState("");
   const [petWeight, setPetWeight] = useState(0);
 
@@ -35,6 +39,7 @@ const Home = () => {
         style={styles.input}
       />
       <Button title="Submit" onPress={handleSubmit} />
+      <PreviousEntries />
     </View>
   );
 };
