@@ -38,10 +38,7 @@
                 "name": {
                   "example": "any"
                 },
-                "species": {
-                  "example": "any"
-                },
-                "weight": {
+                "comments": {
                   "example": "any"
                 }
               }

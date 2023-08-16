@@ -1,12 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Button } from "react-native";
+import axios from "axios";
+import { MONGODB_URI } from "@env";
 import { MapEntries } from "../types/entries.type";
-
-// Import the mock data
-import mockEntries from "../db/data.json";
 
 const PreviousEntries = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [entries, setEntries] = useState<MapEntries[]>([]);
+
+  useEffect(() => {
+    fetchEntries();
+  }, []);
+
+  const fetchEntries = async () => {
+    try {
+      // Send a GET request to fetch previous entries from the server
+      const response = await axios.get(`https://petweighttracker-server.onrender.com/pets`, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+
+      // Update the entries state with the received data
+      setEntries(response.data);
+    } catch (error) {
+      console.error("Error fetching entries:", error);
+    }
+  };
 
   const handleClick = () => {
     setIsVisible(!isVisible);
@@ -18,10 +38,10 @@ const PreviousEntries = () => {
       <Button title="Show Entries" onPress={handleClick} />
       {isVisible && (
         <ScrollView>
-          {mockEntries.map((entry: MapEntries) => (
+          {entries.map((entry: MapEntries) => (
             <View key={entry.id} style={styles.entry}>
               <Text style={styles.name}>{entry.name}</Text>
-              <Text style={styles.weight}>{entry.weight} lbs</Text>
+              <Text style={styles.comments}>{entry.comments}</Text>
             </View>
           ))}
         </ScrollView>
@@ -42,13 +62,14 @@ const styles = StyleSheet.create({
   },
   entry: {
     margin: 10,
-    border: 1,
+    padding: 10,
+    borderWidth: 1,
     borderRadius: 5,
   },
   name: {
     fontSize: 18,
   },
-  weight: {
+  comments: {
     fontSize: 16,
   },
 });

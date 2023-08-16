@@ -1,27 +1,34 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 import axios from 'axios';
-import {MONGODB_URI} from "@env";
+import { MONGODB_URI } from "@env";
 import { Entries } from "../types/entries.type";
 import PreviousEntries from "../components/PreviousEntries";
 
 const Home = () => {
-  const urlDB = MONGODB_URI
+  const urlDB = MONGODB_URI;
   const [petName, setPetName] = useState("");
-  const [petWeight, setPetWeight] = useState(0);
+  const [comments, setComments] = useState(""); // State for comments
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newPet: Entries = {
       name: petName,
-      weight: petWeight,
+      comments: comments,
     };
 
-    // TODO: Save the pet to the database
-  };
+    try {
+      // Send a POST request to your server
+      const response = await axios.post(`https://petweighttracker-server.onrender.com/pets/create`, newPet, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
 
-  const updatePetWeight = (text: string | number) => {
-    if (typeof text === "number") {
-      setPetWeight(Number(text));
+      // Handle success or show a message to the user
+      console.log('Pet created:', response.data);
+    } catch (error) {
+      // Handle error or show an error message to the user
+      console.error('Error creating pet:', error);
     }
   };
 
@@ -34,8 +41,8 @@ const Home = () => {
         style={styles.input}
       />
       <TextInput
-        placeholder="Peso de Mascota (kg)"
-        onChangeText={(text) => updatePetWeight(text)}
+        placeholder="Añadir comentario"
+        onChangeText={(text) => setComments(text)}
         style={styles.input}
       />
       <Button title="Submit" onPress={handleSubmit} />
@@ -53,7 +60,7 @@ const styles = StyleSheet.create({
   input: {
     width: 350,
     height: 45,
-    margin:10,
+    margin: 10,
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 5,

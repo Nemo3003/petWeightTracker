@@ -15,9 +15,9 @@ export const getAllPets = async (req:petReq, res:any) => {
 
 // Controller function to create a new pet
 export const createPet = async (req:any, res:any) => {
-  const { name, species, weight } = req.body;
+  const { name, comments } = req.body;
   try {
-    const pet = new PetApp({ name, species, weight });
+    const pet = new PetApp({ name, comments});
     const newPet = await pet.save();
     res.status(201).json(newPet);
   } catch (err) {

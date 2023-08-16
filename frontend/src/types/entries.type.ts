@@ -1,10 +1,10 @@
 export type Entries = {
     name: string,
-    weight: number,
+    comments: string
 }
 
 export type MapEntries = {
     id: number,
     name: string,
-    weight: number,
+    comments: string
 }
