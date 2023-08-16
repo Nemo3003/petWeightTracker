@@ -36,11 +36,7 @@ const Mascotas = ({ updateEntries }) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`https://petweighttracker-server.onrender.com/pets/del/${id}`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
-      });
+      await axios.delete(`https://petweighttracker-server.onrender.com/pets/del/${id}`);
       updateEntries();
     } catch (error) {
       console.error("Error deleting entry:", error);

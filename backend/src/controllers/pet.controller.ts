@@ -28,7 +28,7 @@ export const createPet = async (req:any, res:any) => {
 // Delete a pet
 export const deletePet = async (req:any, res:any) => {
   try{
-    const deletePet = await PetApp.findByIdAndDelete(req.params.id);
+    const deletePet = await PetApp.findByIdAndDelete(req.params._id);
     //res.redirect('/');
     res.status(202).json(deletePet);
     }
@@ -41,7 +41,7 @@ export const deletePet = async (req:any, res:any) => {
 export const updatePet = async (req:any, res:any) => {
   const {name, comments} = req.body;
     try{
-    const petEdited = await PetApp.findByIdAndUpdate(req.params.id, 
+    const petEdited = await PetApp.findByIdAndUpdate(req.params._id, 
         {name, comments});
     res.json(petEdited).status(200)
     }
