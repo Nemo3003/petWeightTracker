@@ -83,10 +83,10 @@ const Mascotas = ({ updateEntries }) => {
     setComments("");
   };
 
-  const handleSubmitUpdate = async (id:number) => {
+  const handleSubmitUpdate = async () => {
     try {
       await axios.put(
-        `https://petweighttracker-server.onrender.com/pets/upd/${id}`,
+        `https://petweighttracker-server.onrender.com/pets/upd/${editFormData?.id}`,
         {
           name,
           comments,
