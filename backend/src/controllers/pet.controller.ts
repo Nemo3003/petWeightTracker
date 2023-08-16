@@ -27,37 +27,27 @@ export const createPet = async (req:any, res:any) => {
 };
 // Delete a pet
 export const deletePet = async (req:any, res:any) => {
-  const petId = mongoose.Types.ObjectId(req.params.id); // Convert ID to ObjectId
-  try {
-    const deletedPet = await PetApp.findByIdAndDelete(petId);
-    if (!deletedPet) {
-      return res.status(404).json({ error: "Pet not found" });
+  try{
+    const deletePet = await PetApp.findByIdAndDelete(req.params.id);
+    //res.redirect('/');
+    res.status(202).json(deletePet);
     }
-    res.status(200).json({ message: "Pet deleted successfully" });
-  } catch (e) {
-    res.status(500).json({ error: "Failed to delete pet" });
-  }
+    catch(err){
+        res.status(500).json({ message: err });
+    }
 };
 
 // Update a pet
 export const updatePet = async (req:any, res:any) => {
-  const petId = mongoose.Types.ObjectId(req.params.id); // Convert ID to ObjectId
-  const { name, comments } = req.body;
-  try {
-    const updatedPet = await PetApp.findByIdAndUpdate(
-      petId,
-      { name, comments },
-      { new: true }
-    );
-
-    if (!updatedPet) {
-      return res.status(404).json({ error: "Pet not found" });
+  const {name, comments} = req.body;
+    try{
+    const petEdited = await PetApp.findByIdAndUpdate(req.params.id, 
+        {name, comments});
+    res.json(petEdited).status(200)
     }
-
-    res.status(200).json(updatedPet);
-  } catch (e) {
-    res.status(500).json({ error: "Failed to update pet" });
-  }
+    catch(err){
+        res.status(500).json({ message: err });
+    }
 };
 
 // Export the controller functions
