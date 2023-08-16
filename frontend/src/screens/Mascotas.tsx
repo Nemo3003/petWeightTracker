@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Modal, TextInput, Button } from "react-native";
 import axios from "axios";
 import { MONGODB_URI } from "@env";
 import { MapEntries } from "../types/entries.type";
@@ -8,6 +8,10 @@ import Layout from "./Layout";
 const Mascotas = ({ updateEntries }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [entries, setEntries] = useState<MapEntries[]>([]);
+  const [isEditFormVisible, setIsEditFormVisible] = useState(false);
+  const [editFormData, setEditFormData] = useState<MapEntries | null>(null);
+  const [name, setName] = useState("");
+  const [comments, setComments] = useState("");
 
   useEffect(() => {
     fetchEntries();
@@ -43,14 +47,36 @@ const Mascotas = ({ updateEntries }) => {
     }
   };
 
-  const handleUpdate = async (id: number) => {
+  const handleUpdate = (entry: MapEntries) => {
+    setEditFormData(entry);
+    setName(entry.name); // Pre-fill the name field with the current name
+    setComments(entry.comments); // Pre-fill the comments field with the current comments
+    setIsEditFormVisible(true);
+  };
+
+  const closeEditForm = () => {
+    setIsEditFormVisible(false);
+    setEditFormData(null);
+    setName("");
+    setComments("");
+  };
+
+  const handleSubmitUpdate = async () => {
     try {
-      await axios.put(`https://petweighttracker-server.onrender.com/pets/upd/${id}`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
+      await axios.put(
+        `https://petweighttracker-server.onrender.com/pets/upd/${editFormData?.id}`,
+        {
+          name,
+          comments,
         },
-      });
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
       updateEntries();
+      closeEditForm();
     } catch (error) {
       console.error("Error updating entry:", error);
     }
@@ -69,13 +95,34 @@ const Mascotas = ({ updateEntries }) => {
                 <Pressable style={styles.button} onPress={() => handleDelete(entry.id)}>
                   <Text style={styles.buttonText}>Delete</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => handleUpdate(entry.id)}>
-                  <Text style={styles.buttonText}>Update</Text>
+                <Pressable style={styles.button} onPress={() => handleUpdate(entry)}>
+                    <Text style={styles.buttonText}>Update</Text>
                 </Pressable>
               </View>
             </View>
           ))}
         </ScrollView>
+        {isEditFormVisible && (
+            <Modal visible={isEditFormVisible} animationType="slide">
+                <View style={styles.editFormContainer}>
+                <Text>Edit Entry</Text>
+                <TextInput
+                    placeholder="Name"
+                    value={name}
+                    onChangeText={setName}
+                    style={styles.input}
+                />
+                <TextInput
+                    placeholder="Comments"
+                    value={comments}
+                    onChangeText={setComments}
+                    style={styles.input}
+                />
+                <Button title="Update" onPress={handleSubmitUpdate} />
+                <Button title="Cancel" onPress={closeEditForm} />
+                </View>
+            </Modal>
+        )}
       </View>
     </Layout>
   );
@@ -116,6 +163,18 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  editFormContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    width: '80%',
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
   },
 });
 
