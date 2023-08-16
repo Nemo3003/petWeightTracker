@@ -46,25 +46,17 @@ const Mascotas = ({ updateEntries }) => {
       console.error("Error deleting entry:", error);
     }
   };
-
-  const handleUpdate = (entry: MapEntries) => {
+  
+  const handleUpdate =async (entry: MapEntries) => {
     setEditFormData(entry);
     setName(entry.name); // Pre-fill the name field with the current name
     setComments(entry.comments); // Pre-fill the comments field with the current comments
     setIsEditFormVisible(true);
-  };
-
-  const closeEditForm = () => {
-    setIsEditFormVisible(false);
-    setEditFormData(null);
-    setName("");
-    setComments("");
-  };
-
-  const handleSubmitUpdate = async () => {
+    const id = entry.id; // Get the id of the entry
+  
     try {
       await axios.put(
-        `https://petweighttracker-server.onrender.com/pets/upd/${editFormData?.id}`,
+        `https://petweighttracker-server.onrender.com/pets/upd/${id}`,
         {
           name,
           comments,
@@ -75,7 +67,39 @@ const Mascotas = ({ updateEntries }) => {
           },
         }
       );
-      updateEntries();
+  
+      // Fetch updated entries after successful update
+      fetchEntries();
+      closeEditForm();
+    } catch (error) {
+      console.error("Error updating entry:", error);
+    }
+  };
+
+  const closeEditForm = () => {
+    setIsEditFormVisible(false);
+    setEditFormData(null);
+    setName("");
+    setComments("");
+  };
+
+  const handleSubmitUpdate = async (id:number) => {
+    try {
+      await axios.put(
+        `https://petweighttracker-server.onrender.com/pets/upd/${id}`,
+        {
+          name,
+          comments,
+        },
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
+
+      // Fetch updated entries after successful update
+      fetchEntries();
       closeEditForm();
     } catch (error) {
       console.error("Error updating entry:", error);

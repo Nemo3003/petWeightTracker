@@ -26,8 +26,8 @@ export const createPet = async (req:any, res:any) => {
 };
 // Delete a pet
 export const deletePet = async (req:any, res:any) => {
+  const petId = mongoose.Types.ObjectId(req.params.id); // Convert ID to ObjectId
   try {
-    const petId = mongoose.Types.ObjectId(req.params.id); // Convert ID to ObjectId
     const deletedPet = await PetApp.findByIdAndDelete(petId);
     if (!deletedPet) {
       return res.status(404).json({ error: "Pet not found" });
