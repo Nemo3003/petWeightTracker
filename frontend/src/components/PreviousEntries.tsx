@@ -4,13 +4,13 @@ import axios from "axios";
 import { MONGODB_URI } from "@env";
 import { MapEntries } from "../types/entries.type";
 
-const PreviousEntries = () => {
+const PreviousEntries = ({ updateEntries }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [entries, setEntries] = useState<MapEntries[]>([]);
 
   useEffect(() => {
     fetchEntries();
-  }, []);
+  }, [updateEntries]); // Trigger the effect when updateEntries changes
 
   const fetchEntries = async () => {
     try {
@@ -32,6 +32,8 @@ const PreviousEntries = () => {
     setIsVisible(!isVisible);
   };
 
+  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Previous Entries</Text>
@@ -42,6 +44,7 @@ const PreviousEntries = () => {
             <View key={entry.id} style={styles.entry}>
               <Text style={styles.name}>{entry.name}</Text>
               <Text style={styles.comments}>{entry.comments}</Text>
+              
             </View>
           ))}
         </ScrollView>

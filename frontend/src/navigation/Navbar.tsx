@@ -1,9 +1,12 @@
+// src/navigation/Navbar.js
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigation = useNavigation();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -13,9 +16,22 @@ const Navbar = () => {
     setMenuOpen(false);
   };
 
+  const goHome = () => {
+    closeMenu(); // Close the menu
+    navigation.navigate('Home'); // Navigate to the "Home" screen
+  }
+  const goToMascotas = () => {
+    closeMenu(); // Close the menu
+    navigation.navigate('Mascotas'); // Navigate to the "Mascotas" screen
+  };
+  const gotToAbout = () => {
+    closeMenu(); // Close the menu
+    navigation.navigate('About'); // Navigate to the "About" screen
+  }
+
   return (
     <View style={styles.navbar}>
-      <Text style={styles.title}>PWT</Text>
+      <Text style={styles.title} onPress={goHome}>PWT</Text>
       <TouchableOpacity onPress={toggleMenu}>
         <Feather name={menuOpen ? 'x' : 'menu'} size={24} color="white" />
       </TouchableOpacity>
@@ -27,10 +43,9 @@ const Navbar = () => {
       >
         <TouchableOpacity style={styles.menuOverlay} onPress={closeMenu}>
           <View style={styles.menuContent}>
-            <Text style={styles.link}>Home</Text>
-            <Text style={styles.link}>About</Text>
-            <Text style={styles.link}>Services</Text>
-            <Text style={styles.link}>Contact</Text>
+            <Text style={styles.link} onPress={goHome}>Home</Text>
+            <Text style={styles.link} onPress={goToMascotas}>Mascotas</Text>
+            <Text style={styles.link} onPress={gotToAbout}>About</Text>
           </View>
         </TouchableOpacity>
       </Modal>
@@ -48,26 +63,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#3498db',
     width: '100%',
     height: '15%',
-    top:0
+    top: 0,
   },
   title: {
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: '5%'
+    marginTop: '5%',
   },
   menuOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    justifyContent: 'center', // Center content vertically
+    alignItems: 'center', // Center content horizontally
   },
   menuContent: {
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
     minWidth: 200,
-    alignItems: 'flex-start',
+    alignItems: 'center', // Center items horizontally
   },
   link: {
     color: 'black',

@@ -24,9 +24,45 @@ export const createPet = async (req:any, res:any) => {
     res.status(500).json({ message: err});
   }
 };
+// Delete a pet
+export const deletePet = async (req:any, res:any) => {
+  try {
+    const petId = mongoose.Types.ObjectId(req.params.id); // Convert ID to ObjectId
+    const deletedPet = await PetApp.findByIdAndDelete(petId);
+    if (!deletedPet) {
+      return res.status(404).json({ error: "Pet not found" });
+    }
+    res.status(200).json({ message: "Pet deleted successfully" });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to delete pet" });
+  }
+};
+
+// Update a pet
+export const updatePet = async (req:any, res:any) => {
+  const petId = mongoose.Types.ObjectId(req.params.id); // Convert ID to ObjectId
+  const { name, comments } = req.body;
+  try {
+    const updatedPet = await PetApp.findByIdAndUpdate(
+      petId,
+      { name, comments },
+      { new: true }
+    );
+
+    if (!updatedPet) {
+      return res.status(404).json({ error: "Pet not found" });
+    }
+
+    res.status(200).json(updatedPet);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to update pet" });
+  }
+};
 
 // Export the controller functions
 module.exports = {
   getAllPets,
   createPet,
+  deletePet,
+  updatePet
 };
