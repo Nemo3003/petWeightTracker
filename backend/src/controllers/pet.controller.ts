@@ -1,4 +1,5 @@
 import { petReq } from "../types/pet.type";
+import mongoose from "mongoose";
 
 // backend/controllers/petController.js
 const PetApp = require('../models/pets.models');
