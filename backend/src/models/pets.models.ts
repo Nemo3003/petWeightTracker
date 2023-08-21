@@ -21,6 +21,6 @@ const petSchema = new mongoose.Schema({
   }, // Embedding an array of weight logs as subdocuments
 });
 
-const Pet = mongoose.model('Pet', petSchema);
+const PetApp = mongoose.model('PetApp', petSchema);
 
-module.exports = Pet;
+module.exports = PetApp;

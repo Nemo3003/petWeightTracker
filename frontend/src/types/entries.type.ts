@@ -4,7 +4,7 @@ export type Entries = {
 }
 
 export type MapEntries = {
-    id: number,
+    _id: string,
     name: string,
     comments: string
 }

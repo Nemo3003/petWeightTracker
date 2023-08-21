@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Button } from "react-native";
 import axios from "axios";
-import { MONGODB_URI } from "@env";
 import { MapEntries } from "../types/entries.type";
 
-const PreviousEntries = ({ updateEntries }) => {
+const PreviousEntries = ({ updateEntries }:any) => {
   const [isVisible, setIsVisible] = useState(false);
   const [entries, setEntries] = useState<MapEntries[]>([]);
 
@@ -15,7 +14,7 @@ const PreviousEntries = ({ updateEntries }) => {
   const fetchEntries = async () => {
     try {
       // Send a GET request to fetch previous entries from the server
-      const response = await axios.get(`https://petweighttracker-server.onrender.com/pets`, {
+      const response = await axios.get(`http://localhost:3000/pets`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
         },
@@ -36,15 +35,14 @@ const PreviousEntries = ({ updateEntries }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Previous Entries</Text>
-      <Button title="Show Entries" onPress={handleClick} />
+      <Text style={styles.title}>Entradas Anteriores</Text>
+      <Button title="Mostrar/Ocultar" onPress={handleClick} />
       {isVisible && (
         <ScrollView>
           {entries.map((entry: MapEntries) => (
-            <View key={entry.id} style={styles.entry}>
+            <View key={entry._id} style={styles.entry}>
               <Text style={styles.name}>{entry.name}</Text>
               <Text style={styles.comments}>{entry.comments}</Text>
-              
             </View>
           ))}
         </ScrollView>
@@ -62,6 +60,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    marginBottom:10
   },
   entry: {
     margin: 10,

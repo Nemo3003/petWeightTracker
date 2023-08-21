@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 import axios from 'axios';
-import { MONGODB_URI } from "@env";
 import { Entries } from "../types/entries.type";
 import PreviousEntries from "./PreviousEntries";
 
 const CreateEntries = () => {
-  const urlDB = MONGODB_URI;
   const [petName, setPetName] = useState("");
   const [comments, setComments] = useState("");
   const [updateEntries, setUpdateEntries] = useState(false); // State for triggering update
@@ -19,7 +17,7 @@ const CreateEntries = () => {
 
     try {
       // Send a POST request to your server
-      const response = await axios.post(`https://petweighttracker-server.onrender.com/pets/create`, newPet, {
+      const response = await axios.post(`http://localhost:3000/pets/create`, newPet, {
         headers: {
           'Access-Control-Allow-Origin': '*',
         },
@@ -30,6 +28,10 @@ const CreateEntries = () => {
 
       // Trigger the update of PreviousEntries component
       setUpdateEntries(true);
+
+      // Clear the input fields after successful submission
+      setPetName("");
+      setComments("");
     } catch (error) {
       // Handle error or show an error message to the user
       console.error('Error creating pet:', error);
@@ -38,18 +40,22 @@ const CreateEntries = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Seguimiento de peso de mascotas</Text>
+      <Text style={styles.mainText}>Seguimiento de peso de mascotas</Text>
       <TextInput
         placeholder="Nombre de Mascota"
+        value={petName}
         onChangeText={(text) => setPetName(text)}
         style={styles.input}
       />
       <TextInput
         placeholder="Añadir comentario"
+        value={comments}
         onChangeText={(text) => setComments(text)}
-        style={styles.input}
+        multiline={true} // Allow multiple lines of input
+        numberOfLines={4} // Set the initial number of visible lines
+        style={[styles.input, styles.multilineInput]} // Apply additional styling for multiline input
       />
-      <Button title="Submit" onPress={handleSubmit} />
+      <Button title="Cargar" onPress={handleSubmit} />
       <PreviousEntries updateEntries={updateEntries} />
     </View>
   );
@@ -69,7 +75,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
+    fontSize: 18,
   },
+  multilineInput: {
+    height: 100, // Adjust this value to control the height of the multiline input
+  },
+  mainText:{
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  }
 });
 
 export default CreateEntries;

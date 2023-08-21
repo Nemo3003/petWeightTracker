@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import Navbar from '../navigation/Navbar';
 import Footer from '../navigation/Footer';
 
-const Layout = ({ children }) => {
+const Layout = ({ children }:any) => {
   return (
     <View style={styles.container}>
       <Navbar />
